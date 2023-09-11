@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Toilet Sites</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+        }
+
+        .search-container {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-input {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.js"></script>
+    <script>
+        var districtData = [
+  { district: "Abim", population: 153500, toilets: 2500 },
+  { district: "Adjumani", population: 269900, toilets: 3500 },
+  { district: "Agago", population: 225800, toilets: 3000 },
+  { district: "Alebtong", population: 202800, toilets: 2800 },
+  { district: "Amolatar", population: 206700, toilets: 2900 },
+  { district: "Amudat", population: 94700, toilets: 1800 },
+  { district: "Amuria", population: 203800, toilets: 2800 },
+  { district: "Amuru", population: 232800, toilets: 3200 },
+  { district: "Apac", population: 468600, toilets: 5600 },
+  { district: "Arua", population: 971700, toilets: 7100 },
+  { district: "Budaka", population: 217300, toilets: 2900 },
+  { district: "Bududa", population: 319100, toilets: 4200 },
+  { district: "Bugiri", population: 604700, toilets: 7500 },
+  { district: "Buhweju", population: 184100, toilets: 2600 },
+  { district: "Buikwe", population: 378200, toilets: 4800 },
+  { district: "Bukedea", population: 226800, toilets: 3000 },
+  { district: "Bukomansimbi", population: 256500, toilets: 3300 },
+  { district: "Bukwo", population: 176500, toilets: 2500 },
+  { district: "Bulambuli", population: 290800, toilets: 3800 },
+  { district: "Buliisa", population: 149300, toilets: 2200 },
+  { district: "Bundibugyo", population: 252500, toilets: 3400 },
+  { district: "Bunyangabu", population: 227800, toilets: 3100 },
+  { district: "Bushenyi", population: 808200, toilets: 9700 },
+  { district: "Busia", population: 301000, toilets: 4000 },
+  { district: "Butaleja", population: 273100, toilets: 3600 },
+  { district: "Butambala", population: 253900, toilets: 3400 },
+  { district: "Butebo", population: 196400, toilets: 2700 },
+  { district: "Buvuma", population: 97000, toilets: 1800 },
+  { district: "Buyende", population: 270300, toilets: 3500 },
+  { district: "Dokolo", population: 208700, toilets: 2900 },
+  { district: "Gomba", population: 189900, toilets: 2600 },
+  { district: "Gulu", population: 495100, toilets: 6300 },
+  { district: "Hoima", population: 965800, toilets: 11400 },
+  { district: "Ibanda", population: 439200, toilets: 5300 },
+  { district: "Iganga", population: 471200, toilets: 5900 },
+  { district: "Isingiro", population: 607800, toilets: 7800 },
+  { district: "Jinja", population: 491300, toilets: 6200 },
+  { district: "Kaabong", population: 287300, toilets: 4000 },
+  { district: "Kabale", population: 520600, toilets: 6500 },
+  { district: "Kabarole", population: 498500, toilets: 6300 },
+  { district: "Kaberamaido", population: 218700, toilets: 3000 },
+  { district: "Kagadi", population: 348600, toilets: 4700 },
+  { district: "Kakumiro", population: 248200, toilets: 3300 },
+  { district: "Kalangala", population: 52900, toilets: 1400 },
+  { district: "Kaliro", population: 267700, toilets: 3500 },
+  { district: "Kalungu", population: 254500, toilets: 3400 },
+  { district: "Kampala", population: 1734000, toilets: 20100 },
+  { district: "Kamuli", population: 537200, toilets: 6600 },
+  { district: "Kamwenge", population: 486500, toilets: 5900 },
+  { district: "Kanungu", population: 236000, toilets: 3400 },
+  { district: "Kapchorwa", population: 259400, toilets: 3400 },
+  { district: "Kasese", population: 703000, toilets: 8400 },
+  { district: "Katakwi", population: 217800, toilets: 2900 },
+  { district: "Kayunga", population: 442100, toilets: 5600 },
+  { district: "Kibaale", population: 657500, toilets: 8100 },
+  { district: "Kiboga", population: 359300, toilets: 4600 },
+  { district: "Kibuku", population: 229200, toilets: 3100 },
+  { district: "Kiruhura", population: 247800, toilets: 3400 },
+  { district: "Kiryandongo", population: 387200, toilets: 5300 },
+  { district: "Kisoro", population: 282100, toilets: 3600 },
+  { district: "Kitgum", population: 409400, toilets: 5100 },
+  { district: "Koboko", population: 250300, toilets: 3500 },
+  { district: "Kole", population: 289200, toilets: 3900 },
+  { district: "Kotido", population: 268500, toilets: 4100 },
+  { district: "Kumi", population: 384200, toilets: 4700 },
+  { district: "Kween", population: 157700, toilets: 2300 },
+  { district: "Kyankwanzi", population: 235400, toilets: 3300 },
+  { district: "Kyegegwa", population: 415100, toilets: 5600 },
+  { district: "Kyenjojo", population: 512300, toilets: 6600 },
+  { district: "Lamwo", population: 220800, toilets: 3000 },
+  { district: "Lira", population: 491800, toilets: 6200 },
+  { district: "Luuka", population: 242800, toilets: 3400 },
+  { district: "Luwero", population: 515900, toilets: 6400 },
+  { district: "Lwengo", population: 426200, toilets: 5500 },
+  { district: "Lyantonde", population: 248800, toilets: 3400 },
+  { district: "Manafwa", population: 416500, toilets: 5300 },
+  { district: "Maracha", population: 202700, toilets: 2800 },
+  { district: "Masaka", population: 491200, toilets: 6300 },
+  { district: "Masindi", population: 479100, toilets: 6100 },
+  { district: "Mayuge", population: 346900, toilets: 4600 },
+  { district: "Mbale", population: 682800, toilets: 8300 },
+  { district: "Mbarara", population: 658900, toilets: 7900 },
+  { district: "Mitooma", population: 234200, toilets: 3300 },
+  { district: "Mityana", population: 535800, toilets: 6700 },
+  { district: "Moroto", population: 336600, toilets: 4700 },
+  { district: "Moyo", population: 287600, toilets: 4100 },
+  { district: "Mpigi", population: 487200, toilets: 6100 },
+  { district: "Mubende", population: 532700, toilets: 6700 },
+  { district: "Mukono", population: 647200, toilets: 8000 },
+  { district: "Nakapiripirit", population: 205500, toilets: 2800 },
+  { district: "Nakaseke", population: 354100, toilets: 4500 },
+  { district: "Nakasongola", population: 289600, toilets: 3800 },
+  { district: "Namayingo", population: 219900, toilets: 3000 },
+  { district: "Namisindwa", population: 178200, toilets: 2400 },
+  { district: "Namutumba", population: 286700, toilets: 4000 },
+  { district: "Napak", population: 244800, toilets: 3300 },
+  { district: "Nebbi", population: 432900, toilets: 5400 },
+  { district: "Ngora", population: 277300, toilets: 3700 },
+  { district: "Ntoroko", population: 110700, toilets: 1800 },
+  { district: "Ntungamo", population: 501300, toilets: 6100 },
+  { district: "Nwoya", population: 230200, toilets: 3200 },
+  { district: "Omoro", population: 202700, toilets: 2800 },
+  { district: "Otuke", population: 203500, toilets: 2800 },
+  { district: "Oyam", population: 425800, toilets: 5300 },
+  { district: "Pader", population: 214700, toilets: 2900 },
+  { district: "Pakwach", population: 190500, toilets: 2600 },
+  { district: "Pallisa", population: 489400, toilets: 6000 },
+  { district: "Rakai", population: 556500, toilets: 7000 },
+  { district: "Rubanda", population: 206400, toilets: 2800 },
+  { district: "Rubirizi", population: 244200, toilets: 3300 },
+  { district: "Rukiga", population: 186400, toilets: 2500 },
+  { district: "Rukungiri", population: 391300, toilets: 4900 },
+  { district: "Sembabule", population: 383200, toilets: 5000 },
+  { district: "Serere", population: 370100, toilets: 4800 },
+  { district: "Sheema", population: 333100, toilets: 4200 },
+  { district: "Sironko", population: 350200, toilets: 4500 },
+  { district: "Soroti", population: 546200, toilets: 6800 },
+  { district: "Tororo", population: 652400, toilets: 7900 },
+  { district: "Wakiso", population: 2879000, toilets: 35200 },
+  { district: "Yumbe", population: 590700, toilets: 7300 },
+  { district: "Zombo", population: 238300, toilets: 3300 }
+];
+
+
+        // Create a map instance
+        const map = L.map("map").setView([1.3733, 32.2903], 7);
+
+        // Add a tile layer from OpenStreetMap
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
+        // Create a custom red icon for markers
+        const redIcon = L.icon({
+            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            tooltipAnchor: [16, -28],
+            shadowSize: [41, 41],
+        });
+
+        // Create a search control with a dropdown and add it to the map
+        const searchControlDropdown = L.Control.extend({
+            onAdd: function (map) {
+                const container = L.DomUtil.create("div", "search-container");
+
+                // Create a select element for the drop-down
+                const select = L.DomUtil.create("select", "search-input", container);
+
+                // Create an option element for each district in the districtData
+                districtData.forEach((districtInfo) => {
+                    const option = L.DomUtil.create("option");
+                    option.value = districtInfo.district;
+                    option.text = districtInfo.district;
+                    select.appendChild(option);
+                });
+
+                // Event listener for search selection
+                select.addEventListener("change", function (e) {
+                    const selectedDistrict = e.target.value;
+                    const districtInfo = districtData.find((item) => item.district.toLowerCase() === selectedDistrict.toLowerCase());
+                    if (districtInfo) {
+                        const { district, population, toilets, lat, lng } = districtInfo;
+                        // Calculate the number of toilets required
+                        const x = (0.6 * population) / 300;
+                        const y = toilets - x;
+                        const roundedY = Math.round(y);
+
+                        // Display the information in an alert box
+                        alert(`District: ${district}\nPopulation: ${population}\nNumber of Toilets: ${toilets}\nNumber of Toilets Required: ${roundedY}`);
+
+                        // Zoom into the selected district's location
+                        map.setView([lat, lng], 10);
+
+                        // Clear existing markers
+                        if (markerGroup) {
+                            map.removeLayer(markerGroup);
+                        }
+
+                        // Generate suitable toilet sites around the selected district's location
+                        const numSites = 5; // Change this number to control the number of sites
+                        const suitableSites = generateSuitableToiletSites(
+                            [lat, lng],
+                            districtInfo.district,
+                            numSites
+                        );
+
+                        // Create a marker group for the suitable sites
+                        const markerGroup = L.layerGroup();
+
+                        // Add red markers for the suitable sites
+                        suitableSites.forEach((site) => {
+                            L.marker([site.lat, site.lng], { icon: redIcon }).addTo(markerGroup);
+                        });
+
+                        // Add the marker group to the map
+                        markerGroup.addTo(map);
+                    }
+                });
+
+                return container;
+            },
+        });
+        map.addControl(new searchControlDropdown());
+
+        // Function to generate suitable toilet sites around a center point
+        function generateSuitableToiletSites(center, district, numSites) {
+            // For demonstration purposes, let's just create random sites around the center.
+            // You can implement the logic to generate suitable toilet sites based on the district and center.
+
+            const sites = [];
+            const maxDistance = 0.2; // Maximum distance (in degrees) from the center
+
+            for (let i = 0; i < numSites; i++) {
+                let lat, lng;
+                do {
+                    lat = center[0] + (Math.random() - 0.5) * maxDistance;
+                    lng = center[1] + (Math.random() - 0.5) * maxDistance;
+                } while (!isSiteSuitable(lat, lng, district));
+
+                sites.push({ lat, lng });
+            }
+            return sites;
+        }
+
+        // Function to check if a site is suitable based on various criteria
+        function isSiteSuitable(lat, lng, district) {
+            // For this example, let's assume a site is suitable if it's within the district boundaries.
+            // You can add more criteria here as needed.
+
+            // In this example, we'll just return true to consider all sites as suitable.
+            return true;
+        }
+    </script>
+</body>
+</html>
